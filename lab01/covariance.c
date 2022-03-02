@@ -1,8 +1,8 @@
 /**
  * Modern Computing Technologies, WUT, 2022
  * 
- * Author: [YOUR_NAME]
- * Date: [DATE_OF_SENDIG_THE_REPORT]
+ * Author: Jakub Zieliński
+ * Date: 02.03.2022
  * 
  * Compilation command:
  *      gcc covariance.c -o covariance -lm 
@@ -58,11 +58,11 @@
 
 int main(int argc, char **argv)
 {
-    int i, j;
+  int i, j, in;
 
     // allocate memory
-    double *var[5];
-    for (i = 0; i < 5; i++)
+    double *var[10];
+    for (i = 0; i < 10; i++)
         cppmallocl(var[i], NELEMENTS, double);
 
     // Read binary data
@@ -95,10 +95,44 @@ int main(int argc, char **argv)
 
     // generate additional random variables v_6, ..., v_10 and compute covariance matrix
     // make computation only for elements cov(i,j) where i<=j (see printing statment)
-    double cov[10][10]; // storage for covaraince matrix
+    double cov[10][10] = { 0 }; // storage for covaraince matrix
+    double sum_var[10] = { 0 };
+    double avg_var[10] = { 0 };
     b_t();              // start timing
 
-    // TODO: add your code here!
+    //generate additional random variables
+    for(in = 0; in < NELEMENTS; in++){
+      sum_var[0] = sum_var[0] +  var[0][in];
+      sum_var[1] = sum_var[1] +  var[1][in];
+      sum_var[2] = sum_var[2] +  var[2][in];
+      sum_var[3] = sum_var[3] +  var[3][in];
+      sum_var[4] = sum_var[4] +  var[4][in];
+
+      var[5][in] = sin(var[1][in]) + sin(var[0][in]);
+      var[6][in] = exp(var[2][in]) - exp(-1.*var[4][in]);
+      var[7][in] = sin(var[3][in])*cos(var[0][in]) + cos(var[3][in])*sin(var[2][in]);
+      var[8][in] = hypot(var[2][in], var[1][in]);
+      var[9][in] = cbrt(var[3][in]);
+
+      sum_var[5] = sum_var[5] +  var[5][in];
+      sum_var[6] = sum_var[6] +  var[6][in];
+      sum_var[7] = sum_var[7] +  var[7][in];
+      sum_var[8] = sum_var[8] +  var[8][in];
+      sum_var[9] = sum_var[9] +  var[9][in];
+    }
+
+    for(i = 0; i<10; i++){
+      avg_var[i] = sum_var[i] / NELEMENTS;
+    }
+
+    // calculate covariance
+    for (i = 0; i < 10; i++){
+      for(j = 0; j <= i; j++){
+	for( in=0; in<NELEMENTS; in++)
+	  cov[i][j] = cov[i][j] +  (var[i][in] - avg_var[i]) * (var[j][in] - avg_var[j]);
+	cov[i][j] = cov[i][j] / (NELEMENTS - 1);
+      }
+    }
 
     double tcmp = e_t(); // stop timing
     printf("# COMPUTATION TIME: %f sec\n", tcmp);
