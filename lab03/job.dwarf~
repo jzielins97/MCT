@@ -1,0 +1,21 @@
+#!/bin/bash -l
+#PBS -N job_name
+#PBS -l nodes=7:ppn=20
+#PBS -l walltime=0:15:00
+#PBS -j oe
+#PBS -l mem=16GB
+
+cd $PBS_O_WORKDIR/
+
+mpirun -np 140 --map-by ppr:20:node ./your_code_name > output_file.txt
+
+
+# In order the s script use:
+# qsub job.dwarf
+
+# In order to check status of job use:
+# qstat
+
+# In order to delete job use:
+# qdel jobid
+
