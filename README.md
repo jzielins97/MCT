@@ -47,3 +47,16 @@ cov(10,10)= 0.14192182
 5. To speed up you work start with provided template below.
 
 6. Deadline for submission of report is: 09-03-2022
+
+
+## Lab 2:
+
+
+Speed up your Task1 code for the covariance matrix calculation using openMP.
+
+Execute calculations for following number of threads:
+        1, 2, 4, 8, 16, 20, 30, 40.
+
+In the report provide simple plot showing the scaling.
+
+EDIT: USE job.sh SCRIPT TO CALL A JOB. DO NOT USE NODE 72 IN INTERACTIVE MODE.
