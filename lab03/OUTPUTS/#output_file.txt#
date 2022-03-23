@@ -1,0 +1,31 @@
+Process ip= 17: Number of elements: 6710886; Range: [114085070,120795955]; Size of array: 51 MB
+Process ip=  0: Number of elements: 6710887; Range: [0,6710886]; Size of array: 51 MB
+Process ip=  1: Number of elements: 6710887; Range: [6710887,13421773]; Size of array: 51 MB
+Process ip=  2: Number of elements: 6710887; Range: [13421774,20132660]; Size of array: 51 MB
+Process ip=  3: Number of elements: 6710887; Range: [20132661,26843547]; Size of array: 51 MB
+Process ip=  4: Number of elements: 6710887; Range: [26843548,33554434]; Size of array: 51 MB
+Process ip=  5: Number of elements: 6710887; Range: [33554435,40265321]; Size of array: 51 MB
+Process ip=  6: Number of elements: 6710887; Range: [40265322,46976208]; Size of array: 51 MB
+Process ip=  7: Number of elements: 6710887; Range: [46976209,53687095]; Size of array: 51 MB
+Process ip=  8: Number of elements: 6710886; Range: [53687096,60397981]; Size of array: 51 MB
+Process ip=  9: Number of elements: 6710886; Range: [60397982,67108867]; Size of array: 51 MB
+Process ip= 10: Number of elements: 6710886; Range: [67108868,73819753]; Size of array: 51 MB
+Process ip= 11: Number of elements: 6710886; Range: [73819754,80530639]; Size of array: 51 MB
+Process ip= 12: Number of elements: 6710886; Range: [80530640,87241525]; Size of array: 51 MB
+Process ip= 13: Number of elements: 6710886; Range: [87241526,93952411]; Size of array: 51 MB
+Process ip= 14: Number of elements: 6710886; Range: [93952412,100663297]; Size of array: 51 MB
+Process ip= 15: Number of elements: 6710886; Range: [100663298,107374183]; Size of array: 51 MB
+Process ip= 16: Number of elements: 6710886; Range: [107374184,114085069]; Size of array: 51 MB
+Process ip= 18: Number of elements: 6710886; Range: [120795956,127506841]; Size of array: 51 MB
+Process ip= 19: Number of elements: 6710886; Range: [127506842,134217727]; Size of array: 51 MB
+	# process %3 loading data	Read from file #0: 6710887; Range: [0,6710886]; Size of array: 51 MB
+	Read from file #1: 6710887; Range: [0,6710886]; Size of array: 51 MB
+	Read from file #2: 6710887; Range: [0,6710886]; Size of array: 51 MB
+	Read from file #3: 6710887; Range: [0,6710886]; Size of array: 51 MB
+	Read from file #4: 6710887; Range: [0,6710886]; Size of array: 51 MB
+# READ TIME: 0.899090 sec
+var[0][        10]=     0.025864789
+var[0][  13421673]=               0
+--------------------------------------------------------------------------
+mpirun noticed that process rank 0 with PID 54097 on node node2066 exited on signal 11 (Segmentation fault).
+--------------------------------------------------------------------------

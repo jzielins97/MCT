@@ -53,6 +53,7 @@ int main( int argc , char ** argv )
     
     
   // Read binary data
+  MPI_Barrier(MPI_COMM_WORLD);
   b_t(); // start timing
   // MPI_Rev(void* data, int count, MPI_Datatype datatype, int source, int tag, MPI_Comm communicator, MPI_Status* status);
   if(ip>0){
@@ -60,7 +61,7 @@ int main( int argc , char ** argv )
     MPI_Recv(&inmsg, 1, MPI_CHAR,ip-1, 1, MPI_COMM_WORLD, &Stat ); // wait for signal from previous process
   }
 
-  printf("\t# process %3 loading data", ip);
+  printf("\t# process %3ld loading data", ip);
   for(i=0; i<5; i++){
       	
     sprintf(file_name, "/home2/archive/MCT-2022/lab1/var%d.dat", i+1);
@@ -85,7 +86,7 @@ int main( int argc , char ** argv )
     //MPI_Send(void* data, int count, MPI_Datatype datatype, int destination, int tag, MPI_Comm communicator);
     MPI_Send(&outmsg, 1, MPI_CHAR, ip+1, 1, MPI_COMM_WORLD); // send signal to process ip+1 that reading of my chunks is finished
   }// end of if(ip!=(np-1))
-    
+  
   double tio = e_t(); // stop timing
   printf("# READ TIME: %f sec\n", tio);
     
