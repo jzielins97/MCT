@@ -6,8 +6,11 @@
 #PBS -l mem=16GB
 
 cd $PBS_O_WORKDIR/
+# load MPI module
+module load openmpi-gcc447-Cuda90/3.1.1
 
-mpirun -np 140 --map-by ppr:20:node ./cov_mpi > OUTPUTS/output_file.txt
+# run program with MPI
+mpirun -np 20 --map-by ppr:20:node ./cov_mpi > OUTPUTS/output_file.txt
 
 
 # In order the s script use:
