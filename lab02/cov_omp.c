@@ -121,18 +121,20 @@ int main(int argc, char **argv)
 
     // calculate covariance
     double priv_cov = 0;
-    for (i = 0; i < 10; i++){
-      for(j = 0; j <= i; j++){
-	priv_cov = 0;
 #pragma omp parallel private(in) reduction(+:priv_cov)
-	{
+    {
+
+      for (i = 0; i < 10; i++){
+	for(j = 0; j <= i; j++){
+	  priv_cov = 0;
           #pragma omp for schedule(dynamic,chunk)
-	  for( in=0; in<NELEMENTS; in++)
-	    priv_cov += (var[i][in] - avg_var[i]) * (var[j][in] - avg_var[j]);
-	}//end of openMP
-	cov[i][j] = priv_cov / (NELEMENTS - 1);
+	    for( in=0; in<NELEMENTS; in++)
+	      priv_cov += (var[i][in] - avg_var[i]) * (var[j][in] - avg_var[j]);
+	  cov[i][j] = priv_cov / (NELEMENTS - 1);
+	}
       }
-    }
+    }//end of openMP
+	
 
     double tcmp = e_t(); // stop timing
     printf("# COMPUTATION TIME: %f sec\n", tcmp);
