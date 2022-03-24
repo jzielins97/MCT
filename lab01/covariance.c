@@ -93,6 +93,11 @@ int main(int argc, char **argv)
     double tio = e_t(); // stop timing
     printf("# READ TIME: %f sec\n", tio);
 
+    long int idx[10] = {10,13421673,25501328,41606496,53677091,73818750,83214911,93952210,106032910,132875451};
+    for(i=0; i<5; i++) 
+      for(j=0; j<10; j++)
+	printf("var[%d][%10ld]=%16.8g\n", i,idx[j],var[i][idx[j]]);
+    
     // generate additional random variables v_6, ..., v_10 and compute covariance matrix
     // make computation only for elements cov(i,j) where i<=j (see printing statment)
     double cov[10][10] = { 0 }; // storage for covaraince matrix

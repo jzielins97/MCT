@@ -31,7 +31,7 @@
 
 int main(int argc, char **argv)
 {
-  FILE* fout = fopen("time.txt","a"); // file for storring time
+  FILE* fout = fopen("time.txt","a"); // file for storring timew
   int nthreads; // number of threads in OpenMP
   if(fout == NULL) {
     printf("# Error: cannot open the file");
