@@ -1,5 +1,5 @@
 #!/bin/bash -l
-#PBS -N jz_cov3(np=2)
+#PBS -N jz_cov3(np=4)
 #PBS -l nodes=1:ppn=20
 #PBS -l walltime=0:15:00
 #PBS -j oe
@@ -11,7 +11,7 @@ module load openmpi-gcc447-Cuda90/3.1.1
 echo "  loaded"
 
 cd $PBS_O_WORKDIR/
-NP=2
+NP=4
 # run program with MPI
 mpirun -np $NP --map-by ppr:20:node ./cov_mpi > OUTPUTS/output_$NP.txt
 
