@@ -20,7 +20,7 @@ with open('../lab02/time.txt','r') as file:
 
 
 # get data from MPI
-with open('../lab03/time.txt','r') as file:
+with open('../lab03/time_mpi.txt','r') as file:
     data = csv.reader(file,delimiter='\t') # read data from the file wiht '\t' separating columns
     
     for ROWS in data:
@@ -28,12 +28,22 @@ with open('../lab03/time.txt','r') as file:
         Y2.append(float(ROWS[1])) # add time value to the Y list
 
 
-for i in range(100):
+NP = 100
+T1 = X2[0] # (X1[0] + X2[0])/2
+for i in range(NP):
+    X3.append(int(i))
+    Y3.append(float(T1 / (i+1)))
     
 # sort data in terms of threads in case it wasn't saved sorted
-X, Y = (list(x) for x in zip(*sorted(zip(X,Y), key=lambda pair: pair[0])))
+X1, Y1 = (list(x) for x in zip(*sorted(zip(X1,Y1), key=lambda pair: pair[0])))
+X2, Y2 = (list(x) for x in zip(*sorted(zip(X2,Y2), key=lambda pair: pair[0])))
+X3, Y3 = (list(x) for x in zip(*sorted(zip(X3,Y3), key=lambda pair: pair[0])))
 
-plt.plot(X,Y,'o-') # plot data as a graf with cirles as markers connected by a line
+plt.plot(X1,Y1,'o-',color='r') # plot data as a graf with cirles as markers connected by a line
+plt.plot(X2,Y2, 'o-',color='b')
+plt.plot(X3,Y3,'--',color='g')
+
+plt.legend(['openMP','MPI','ideal scaling'])
 plt.title("Computational time as function of number of threads used") # set title for the graph
 plt.xlabel("Number of threads [-]") # set x label title
 plt.ylabel("Computational time [s]") # set y label title
