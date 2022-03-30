@@ -60,3 +60,34 @@ Execute calculations for following number of threads:
 In the report provide simple plot showing the scaling.
 
 EDIT: USE job.sh SCRIPT TO CALL A JOB. DO NOT USE NODE 72 IN INTERACTIVE MODE.
+
+## Lab 3 & 4:
+### PART I
+Start from the code: /home2/archive/MCT-2022/lab3
+
+Convert into MPI form part that is responsible for reading data (arrays: var1-var5). Code should read data from files and place it into operating memory in block distribution (use: getNip(), and get_i0() from attached mct_utils.h in order to determine chunk sizes).
+
+Use MPI_Send() and MPI_Recv() routines. Check correctness of data (by checking values of selected elements of array, line: 52 of the template) when code is executed on full dwarf system. For this use template of submission script. 
+
+Do not write report at this stage – in next lab you will add remaining part of the code that computes the covariance matrix.
+
+NOTE: The proper way of reading data in this case is to use MPI I/O, which we will discuss later. Aim if this lab is to learn how to operate with MPI_Send( … ) and MPI_Recv( … ) routines
+
+### PART II
+​Start from the code you have prepared for Part I
+
+Using MPI collective routines speed-up the code for covariance computation  MPI_Allreduce().
+
+Execute code with: 1, 2, 4, 8, 16, 20, 30, 40, ... processes and perform time measurements (mimum on 2 nodes).
+
+On a single plot compare timing obtained for openMP code and MPI code (data for openMP code are limited only only to interval 1-40).
+
+Add to the plot line corresponding to the ideal scaling:
+t_n = t1 / n,
+ where: t_n – time measured using n computing units, 
+t1 – time measured for serial code (single computing unit) 
+n – number of computing units
+Check correctness of computation – compare results with reference code (serial) .
+
+
+
