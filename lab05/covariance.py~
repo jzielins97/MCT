@@ -1,0 +1,61 @@
+ # Modern Computing Technologies, WUT, 2022
+ # 
+ # Author: Jakub Zieliński
+ # Date: 30.03.2022
+ #
+ # Calculate covariance using precompiled
+ # library in c
+ #
+from numpy.ctypeslib import ndpointer
+from ctypes import *
+import numpy as np
+import time
+
+NELEMENTS = 134217728
+libcov = CDLL("./libcov.so")
+
+# check connection
+libcov.connect()
+
+# Describe function
+calculate_covariance = libcov.calculate_covariance
+calculate_covariance.restype = None
+calculate_covariance.argtypes = [c_long, ndpointer(dtype=c_double), ndpointer(dtype=c_double, shape=(10,10))]
+
+cov = np.zeros(shape=(10,10),dtype=np.double)
+# print(cov.shape)
+var = np.empty(shape=(10,NELEMENTS),dtype=np.double)
+fileName = "/home2/archive/MCT-2022/lab1/var{0}.dat"
+
+
+# read data
+for i in range(5):
+    var[i] = np.fromfile(fileName.format(i+1), dtype=np.double)
+    print("File {0} read {1} [10] = {2}".format(i,var[i].shape, var[i][10]))
+
+# print(var.shape)
+for row in var:
+    print("\t{0}".format(row[10]))
+    
+# calculate covariance
+bt = time.time()
+calculate_covariance(NELEMENTS, var, cov)
+et = time.time()
+print("# COMPUTATION TIME: {0} sec".format(bt-et))
+
+# print results
+for i in range(10):
+    for j in range(i):
+        print("cov[{0:2d}][{1:2d}]={3:16.8f}")
+
+        
+        
+
+
+
+
+
+
+
+
+ 
