@@ -20,7 +20,7 @@ libcov.connect()
 # Describe function
 calculate_covariance_2Darray = libcov.calculate_covariance_2Darray
 calculate_covariance_2Darray.restype = None
-calculate_covariance_2Darray.argtypes = [c_long, ndpointer(dtype=np.double, ndim=1, shape=(10*NELEMENTS), flags='C_CONTIGUOUS'), ndpointer(dtype=c_double, shape=(10*10), flags='C_CONTIGUOUS')]
+calculate_covariance_2Darray.argtypes = [c_long, ndpointer(dtype=np.double, ndim=2, shape=(10,NELEMENTS), flags='C_CONTIGUOUS'), ndpointer(dtype=c_double, ndim=2, shape=(10,10), flags='C_CONTIGUOUS')]
 
 read_data_test = libcov.read_data_test
 read_data_test.restype = None
@@ -56,7 +56,7 @@ print("# COMPUTATION TIME: {0} sec".format(bt-et))
 # print results
 for i in range(10):
     for j in range(i):
-        print("cov[{0:2d}][{1:2d}]={3:16.8f}".format(i+1, j+1)
+        print("cov[{0:2d}][{1:2d}]={3:16.8f}".format(i+1, j+1))
 
         
         

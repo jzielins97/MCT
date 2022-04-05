@@ -26,7 +26,7 @@
 
 // testing reading data with 10th element
 void read_data_test(long int N, int id,  double** var){
-  printf("\t%f\n",var[id][10]); // printing 10th element
+  printf("\t%f\n",var[id*N+10]); // printing 10th element
   /* for(int in=0; in<N; in++){ */
   /*   if(in%10000 == 0){ */
   /*     printf("\t%f\n",var[id*N+in]); */
@@ -41,7 +41,7 @@ void calculate_covariance_1Darray(long int N, double* _var, double* _cov){
   // create pointers to specific memory in the array
   double* var[10];
   double* cov[10];
-  for(int i=0; i<10; i++){
+  for(i=0; i<10; i++){
     var[i] = &_var[i*N];
     cov[i] = &_cov[i*10];
   }
@@ -128,7 +128,7 @@ void calculate_covariance_1Darray(long int N, double* _var, double* _cov){
 }
 
 
-// function for taking 1D array and iterating over it as 2D
+// function for taking 2D
 void calculate_covariance_2Darray(long int N, double** var, double** cov){
   printf("# Inside calculate_covariance_1Darray function in c\n");
   long int i, j, in=0;

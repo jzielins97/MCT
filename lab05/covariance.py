@@ -57,12 +57,16 @@ calculate_covariance_1Darray(NELEMENTS,var,cov)
 et = time.time()
 print("# COMPUTATION TIME: {0} sec".format(et-bt))
 
+# changing data to 2D array in the end
 var = var.reshape(10,NELEMENTS)
 print("Check 10th elements ", var.shape)
-print(var[0][10], var[1][10], var[2][10], var[3][10], var[4][10])
+for row in var:
+    print(row[10], end=",")
+print()
+
 cov = cov.reshape((10,10))
 print(cov.shape)
 # print results
 for i in range(10):
-    for j in range(i):
+    for j in range(i+1):
         print("cov[{0:2d}][{1:2d}]={2:16.8f}".format(i+1, j+1, cov[i][j]))
