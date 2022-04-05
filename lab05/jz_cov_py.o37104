@@ -1,0 +1,6 @@
+  File "covariance.py", line 3
+SyntaxError: Non-ASCII character '\xc5' in file covariance.py on line 3, but no encoding declared; see http://www.python.org/peps/pep-0263.html for details
+
+real	0m0.052s
+user	0m0.012s
+sys	0m0.004s
