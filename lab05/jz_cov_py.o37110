@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "covariance.py", line 15, in <module>
+    libcov = CDLL("./libcov.so")
+  File "/opt/rh/rh-python36/root/usr/lib64/python3.6/ctypes/__init__.py", line 343, in __init__
+    self._handle = _dlopen(self._name, mode)
+OSError: ./libcov.so: undefined symbol: GOMP_parallel
+
+real	0m0.352s
+user	0m0.650s
+sys	0m1.515s

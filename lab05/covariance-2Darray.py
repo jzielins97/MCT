@@ -20,7 +20,7 @@ libcov.connect()
 # Describe function
 calculate_covariance = libcov.calculate_covariance
 calculate_covariance.restype = None
-calculate_covariance.argtypes = [c_long, ndpointer(dtype=np.double, ndim=2, shape=(10,NELEMENTS)), ndpointer(dtype=c_double, shape=(10,10), flags='C_CONTIGUOUS')]
+calculate_covariance.argtypes = [c_long, ndpointer(dtype=np.double, ndim=2, shape=(10,NELEMENTS)), ndpointer(dtype=c_double, ndim=2, shape=(10,10), flags='C_CONTIGUOUS')]
 
 read_data_test = libcov.read_data_test
 read_data_test.restype = None

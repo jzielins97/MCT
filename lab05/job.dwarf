@@ -17,6 +17,8 @@
 
 # execute code
 cd $PBS_O_WORKDIR
+source scl_source enable devtoolset-8 rh-python36
+module load openmpi-gcc447-Cuda90/3.1.1
 
 export OMP_NUM_THREADS=20
 time python covariance.py > output.out

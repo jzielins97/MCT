@@ -56,7 +56,7 @@ fileName = "/home2/archive/MCT-2022/lab1/var{0}.dat"
 # read data
 for i in range(5):
     var[i*NELEMENTS:(i+1)*NELEMENTS] = np.fromfile(fileName.format(i+1), dtype=np.double)
-    print("File {0} read {1} elements: [10] = {2}".format(i,var.shape, var[i*NELEMENTS+10]))
+    print("File {0} read: [10] = {1}".format(i, var[i*NELEMENTS+10]))
 
 print("var shape= {0}, is contiguous = {1}".format(var.shape, var.flags['C_CONTIGUOUS']))
 # print("Inside c function 10th elements are:\n")
@@ -72,17 +72,16 @@ print("var shape= {0}, is contiguous = {1}".format(var.shape, var.flags['C_CONTI
 # read_data_test(NELEMENTS, 9, var);
 # calculate covariance
 bt = time.time()
-# calculate_covariance(NELEMENTS,var[0], var[1], var[2], var[3], var[4], var[5], var[6], var[7], var[8], var[9])
-calculate_covariance_1Darray(NELEMENTS,var, cov)
+calculate_covariance_1Darray(NELEMENTS,var,cov)
 et = time.time()
-print("# COMPUTATION TIME: {0} sec".format(bt-et))
+print("# COMPUTATION TIME: {0} sec".format(et-bt))                                    
 
-var.reshape((10,NELEMENTS))
+var = var.reshape(10,NELEMENTS)
 print("Check 10th elements ", var.shape)
 print(var[0][10], var[1][10], var[2][10], var[3][10], var[4][10])
-cov.reshape((10,10))
+cov = cov.reshape((10,10))
 print(cov.shape)
 # print results
 for i in range(10):
     for j in range(i):
-        print("cov[{0:2d}][{1:2d}]={3:16.8f}".format(i, j, cov[i][j]))
+        print("cov({0:2d}][{1:2d})={2:16.8f}".format(i+1, j+1, cov[i][j]))
