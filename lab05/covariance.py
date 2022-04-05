@@ -19,28 +19,9 @@ libcov.connect()
 
 # Describe function
 calculate_covariance_1Darray = libcov.calculate_covariance_1Darray
-calculate_covariance_1Darray.restype = ndpointer(c_double)
+calculate_covariance_1Darray.restype = None
 calculate_covariance_1Darray.argtypes = [c_long, ndpointer(dtype=np.double, ndim=1, shape=(10*NELEMENTS), flags='C_CONTIGUOUS'), ndpointer(dtype=c_double, shape=(10*10), flags='C_CONTIGUOUS')]
-
-calculate_other_variables = libcov.calculate_other_variables
-calculate_other_variables.restype = ndpointer(c_double)
-calculate_other_variables.argtypes = [c_long,
-                                      ndpointer(c_double), #var[0]
-                                      ndpointer(c_double), #var[1]
-                                      ndpointer(c_double), #var[2]
-                                      ndpointer(c_double), #var[3]
-                                      ndpointer(c_double), #var[4]
-                                      ndpointer(c_double), #var[5]
-                                      ndpointer(c_double), #var[6]
-                                      ndpointer(c_double), #var[7]
-                                      ndpointer(c_double), #var[8]
-                                      ndpointer(c_double)] #var[9]
-
-calculate_covariance = libcov.calculate_covariance
-calculate_covariance.restype = ndpointer(c_double)
-calculate_covariance.argtypes = [c_long, ndpointer(c_double), ndpointer(c_double), ndpointer(c_double)]
                                       
-
 # read_data_test = libcov.read_data_test
 # read_data_test.restype = None
 # read_data_test.argtypes = [c_long,c_int, ndpointer(dtype=np.double, ndim=1, shape=(10*NELEMENTS))]
@@ -74,7 +55,7 @@ print("var shape= {0}, is contiguous = {1}".format(var.shape, var.flags['C_CONTI
 bt = time.time()
 calculate_covariance_1Darray(NELEMENTS,var,cov)
 et = time.time()
-print("# COMPUTATION TIME: {0} sec".format(et-bt))                                    
+print("# COMPUTATION TIME: {0} sec".format(et-bt))
 
 var = var.reshape(10,NELEMENTS)
 print("Check 10th elements ", var.shape)
@@ -84,4 +65,4 @@ print(cov.shape)
 # print results
 for i in range(10):
     for j in range(i):
-        print("cov({0:2d}][{1:2d})={2:16.8f}".format(i+1, j+1, cov[i][j]))
+        print("cov[{0:2d}][{1:2d}]={2:16.8f}".format(i+1, j+1, cov[i][j]))

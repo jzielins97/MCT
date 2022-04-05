@@ -18,13 +18,13 @@ libcov = CDLL("./libcov.so")
 libcov.connect()
 
 # Describe function
-calculate_covariance = libcov.calculate_covariance
-calculate_covariance.restype = None
-calculate_covariance.argtypes = [c_long, ndpointer(dtype=np.double, ndim=2, shape=(10,NELEMENTS)), ndpointer(dtype=c_double, ndim=2, shape=(10,10), flags='C_CONTIGUOUS')]
+calculate_covariance_2Darray = libcov.calculate_covariance_2Darray
+calculate_covariance_2Darray.restype = None
+calculate_covariance_2Darray.argtypes = [c_long, ndpointer(dtype=np.double, ndim=1, shape=(10*NELEMENTS), flags='C_CONTIGUOUS'), ndpointer(dtype=c_double, shape=(10*10), flags='C_CONTIGUOUS')]
 
 read_data_test = libcov.read_data_test
 read_data_test.restype = None
-read_data_test.argtypes = [c_long,ndpointer(dtype=np.double, ndim=1, shape=(NELEMENTS))]
+read_data_test.argtypes = [c_long, c_int, ndpointer(dtype=np.double, ndim=2, shape=(10,NELEMENTS))]
 
 cov = np.zeros(shape=(10,10),dtype=np.double)
 print("cov shape= {0}, is contiguous = {1}".format(cov.shape, cov.flags['C_CONTIGUOUS']))
@@ -37,26 +37,26 @@ for i in range(5):
     print("File {0} read {1} elements: [10] = {2}".format(i,var[i].shape, var[i][10]))
 
 print("var shape= {0}, is contiguous = {1}".format(var.shape, var.flags['C_CONTIGUOUS']))
-read_data_test(NELEMENTS, var[0]);
-read_data_test(NELEMENTS, var[1]);
-read_data_test(NELEMENTS, var[2]);
-read_data_test(NELEMENTS, var[3]);
-read_data_test(NELEMENTS, var[4]);
-read_data_test(NELEMENTS, var[5]);
-read_data_test(NELEMENTS, var[6]);
-read_data_test(NELEMENTS, var[7]);
-read_data_test(NELEMENTS, var[8]);
-read_data_test(NELEMENTS, var[9]);
+read_data_test(NELEMENTS, 0, var);
+read_data_test(NELEMENTS, 1, var);
+read_data_test(NELEMENTS, 2, var);
+read_data_test(NELEMENTS, 3, var);
+read_data_test(NELEMENTS, 4, var);
+read_data_test(NELEMENTS, 5, var);
+read_data_test(NELEMENTS, 6, var);
+read_data_test(NELEMENTS, 7, var);
+read_data_test(NELEMENTS, 8, var);
+read_data_test(NELEMENTS, 9, var);
 # calculate covariance
 bt = time.time()
-calculate_covariance(NELEMENTS, np.ascontiguousarray(var, dtype=np.double), cov)
+calculate_covariance_2Darray(NELEMENTS, var, cov)
 et = time.time()
 print("# COMPUTATION TIME: {0} sec".format(bt-et))
 
 # print results
 for i in range(10):
     for j in range(i):
-        print("cov[{0:2d}][{1:2d}]={3:16.8f}")
+        print("cov[{0:2d}][{1:2d}]={3:16.8f}".format(i+1, j+1)
 
         
         
