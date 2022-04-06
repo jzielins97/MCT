@@ -100,10 +100,10 @@ REPORT:
 
 ## Lab 6
 Starting from provided template write a code that computes laplace (in 2D) of function f(x,y):\
-    <img src="https://latex.codecogs.com/svg.image?\bg{white}F(x,y)&space;=&space;\Delta_{2D}&space;f(x,y)&space;=&space;\frac{\partial^2&space;f}{\partial&space;x^2}&space;&plus;&space;\frac{\partial^2&space;f}{\partial&space;y^2}" title="https://latex.codecogs.com/svg.image?\bg{white}F(x,y) = \Delta_{2D} f(x,y) = \frac{\partial^2 f}{\partial x^2} + \frac{\partial^2 f}{\partial y^2}" />
+    <img src="https://latex.codecogs.com/svg.image?\bg{white}F(x,y)&space;=&space;\Delta_{2D}&space;f(x,y)&space;=&space;\frac{\partial^2&space;f}{\partial&space;x^2}&space;&plus;&space;\frac{\partial^2&space;f}{\partial&space;y^2}" title="https://latex.codecogs.com/svg.image?\large \bg{white} F(x,y) = \Delta_{2D} f(x,y) = \frac{\partial^2 f}{\partial x^2} + \frac{\partial^2 f}{\partial y^2}" />
 
 Test you code using function (already in the template: /home2/archive/MCT-2022/lab6 )\
-    <img src="https://latex.codecogs.com/svg.image?\large&space;\bg{white}f(x,y)&space;=&space;exp(Ax^2&space;&plus;&space;By^2&space;&plus;&space;Cxy)" title="https://latex.codecogs.com/svg.image?\large \bg{white}f(x,y) = exp(Ax^2 + By^2 + Cxy)" />
+    <img src="https://latex.codecogs.com/svg.image?\large&space;\bg{white}f(x,y)&space;=&space;exp(Ax^2&space;&plus;&space;By^2&space;&plus;&space;Cxy)" title="https://latex.codecogs.com/svg.image?\large \bg {white}f(x,y) = exp(Ax^2 + By^2 + Cxy)" />
 
 Use openMP technology (see section http://www.fftw.org/fftw3_doc/Multi_002dthreaded-FFTW.html) 
 
