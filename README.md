@@ -89,5 +89,31 @@ t1 – time measured for serial code (single computing unit)
 n – number of computing units
 Check correctness of computation – compare results with reference code (serial) .
 
+## Lab 5
+Rewrite your code for covariance matrix (OpenMP version) to Python + C  framework.
 
+Identify computationally intensive parts and implement them in C  language and use Python to create 'user friendly' code/API.
 
+---------------------------------------------
+REPORT:
+    C and python code + terminal output
+
+## Lab 6
+Starting from provided template write a code that computes laplace (in 2D) of function f(x,y):
+    F(x,y) = \lap_{2D} = \frac{\partial^2 f}{\partial x^2} + \frac{\partial^2 f}{\partial x^2}
+
+Test you code using function (already in the template: /home2/archive/MCT-2022/lab6 )
+    f(x,y) = exp(Ax^2 + By^2 + Cxy)
+
+Use openMP technology (see section http://www.fftw.org/fftw3_doc/Multi_002dthreaded-FFTW.html) 
+
+Execute runs with openMP for nx=ny=4112
+
+REPORT: Code + Scaling plot (processses: 1, 2, 4, 8, 16, 20) + output of the test runs
+Weight for this assignment is 1.5
+
+---------------------------------------------------------
+TIPS:
+Compute forward FT of f(x,y) to obtain f(k_x, k_y).
+From that Construct F(k_x, k_y) = (-k_x^2 - k_y^2) f(k_x, k_y)/(n_x n_y).
+Then compute backward FT of F(k_x, k_y) to obtain F(x,y) = \lap_{2D} f(x,y)
