@@ -1,0 +1,88 @@
+#    COMPARISON RESULTS:
+#           |max[a-b]| :    5.9868928e-08
+#         SUM[(a-b)^2] :    3.4487169e-12
+# SQRT(SUM[(a-b)^2])/N :     1.098304e-13
+
+real	0m9.561s
+user	0m7.340s
+sys	0m1.979s
+Compiling with OpenMP
+Using 1 threads
+#    COMPARISON RESULTS:
+#           |max[a-b]| :    5.9868928e-08
+#         SUM[(a-b)^2] :    3.4487169e-12
+# SQRT(SUM[(a-b)^2])/N :     1.098304e-13
+
+real	0m6.710s
+user	0m6.461s
+sys	0m0.176s
+Compiling with OpenMP
+Using 2 threads
+#    COMPARISON RESULTS:
+#           |max[a-b]| :    5.9868599e-08
+#         SUM[(a-b)^2] :    3.4487168e-12
+# SQRT(SUM[(a-b)^2])/N :     1.098304e-13
+
+real	0m5.495s
+user	0m6.430s
+sys	0m0.164s
+Compiling with OpenMP
+Using 3 threads
+#    COMPARISON RESULTS:
+#           |max[a-b]| :    5.9868599e-08
+#         SUM[(a-b)^2] :    3.4487168e-12
+# SQRT(SUM[(a-b)^2])/N :     1.098304e-13
+
+real	0m5.179s
+user	0m6.448s
+sys	0m0.164s
+Compiling with OpenMP
+Using 4 threads
+#    COMPARISON RESULTS:
+#           |max[a-b]| :    5.9868599e-08
+#         SUM[(a-b)^2] :    3.4487168e-12
+# SQRT(SUM[(a-b)^2])/N :     1.098304e-13
+
+real	0m5.015s
+user	0m6.449s
+sys	0m0.133s
+Compiling with OpenMP
+Using 8 threads
+#    COMPARISON RESULTS:
+#           |max[a-b]| :    5.9868599e-08
+#         SUM[(a-b)^2] :    3.4487168e-12
+# SQRT(SUM[(a-b)^2])/N :     1.098304e-13
+
+real	0m4.976s
+user	0m7.043s
+sys	0m0.276s
+Compiling with OpenMP
+Using 16 threads
+#    COMPARISON RESULTS:
+#           |max[a-b]| :    5.9868599e-08
+#         SUM[(a-b)^2] :    3.4487168e-12
+# SQRT(SUM[(a-b)^2])/N :     1.098304e-13
+
+real	0m4.952s
+user	0m7.611s
+sys	0m0.223s
+Compiling with OpenMP
+Using 20 threads
+#    COMPARISON RESULTS:
+#           |max[a-b]| :    5.9869127e-08
+#         SUM[(a-b)^2] :    3.4487168e-12
+# SQRT(SUM[(a-b)^2])/N :     1.098304e-13
+
+real	0m10.214s
+user	0m12.523s
+sys	0m17.250s
+Compiling with OpenMP
+Using 30 threads
+#    COMPARISON RESULTS:
+#           |max[a-b]| :    5.9869127e-08
+#         SUM[(a-b)^2] :    3.4487168e-12
+# SQRT(SUM[(a-b)^2])/N :     1.098304e-13
+
+real	0m14.675s
+user	0m12.896s
+sys	0m28.156s

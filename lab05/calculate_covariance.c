@@ -5,7 +5,7 @@
  * Date: 30.03.2022
  * 
  * Compilation command:
- *      gcc -shared -o libcov.so -fPIC calculate_covariance.c
+ *      gcc -shared -o libcov.so -fPIC calculate_covariance.c -fopenmp -lm -lgomp -l:libgomp.a
  *
  *
  * Covariance matrix calculation in functions
