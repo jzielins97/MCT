@@ -18,7 +18,8 @@ void plot(double omega = 0.001){
   }
   std::cout<<"Vectors are "<<N<<"-dimensional"<<std::endl;
   double valY;
-  
+
+  TGraph* gr;
   TMultiGraph* mg = new TMultiGraph();
   int n = 0;
   int nCorrect = 0;
@@ -32,7 +33,7 @@ void plot(double omega = 0.001){
     
     if(n<5){
       printf("%12.6lf|%12.6lf|%12.6lf\n",eigenvalue, En, error);
-      TGraph* gr = new TGraph();
+      gr = new TGraph();
       for(int i=0; i<N; i++){
 	fVectors>>valY;
 	gr->SetPoint(i, i, valY);

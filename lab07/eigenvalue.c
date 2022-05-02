@@ -101,7 +101,7 @@ int main()
   for(int i=0; i<N; i++){
     fprintf(fValues,"%lf\n",W[i]);
     for(int j=0; j<N;j++)
-      fprintf(fVectors,"%g ", H[i, j]);
+      fprintf(fVectors,"%g ", H[i*lda+j]);
     fprintf(fVectors,"\n");
   }
   fclose(fValues);
