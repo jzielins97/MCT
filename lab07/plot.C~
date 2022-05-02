@@ -1,0 +1,15 @@
+int w = 600;
+int h = 600;
+
+void plot(double omega = 0.001){
+  // files storing eigenvalues and corresponding vectors
+  FILE* fValues = new FILE("eigenvalues.txt");
+  FILE* fVectors = new FILE("eigenvectors.txt");
+  
+  double valX;
+  double valY;
+  
+  TMultiGraph* mg = new TMultiGraph();
+  TCanvas* c = new TCanvas("c", "Canva", 10, 10, w, h);
+  
+}

@@ -18,13 +18,14 @@
 // convenient documentation is provided here:
 // https://software.intel.com/en-us/mkl-developer-reference-c
 #include <cblas.h>
+#include <lapacke.h>
 
 // Invoke directly Fortran functions
 // see: https://software.intel.com/en-us/mkl-developer-reference-fortran
 
 // call dsyevd(jobz, uplo, n, a, lda, w, work, lwork, iwork, liwork, info)
 
-#define N 400
+#define N 1000
 /**
  * Function returns value of matrix element A_{ij}
  * i,j iterates from 1 to M as in standard mathematical notation
@@ -58,25 +59,53 @@ double matrix_H(int k, int l)
 
 int main()
 {
+  /* int N = 400; */
+  double *H; // matrix
+  cppmallocl(H, N * N, double);
+  
+  int i, j;
+  double rt;
+  
+  // set matrix
+  for (i = 1; i <= N; i++)
+    for (j = 1; j <= N; j++)
+      H[IDX1(i, j)] = matrix_H(i, j);
+  
+  double* W; // vector of eigen values
+  cppmallocl(W, N, double);
+  
+  // using subroutine for calculating eigenvalues of a symetric matrix:
+  // SUBROUTINE DSYEVD( JOBZ, UPLO, N, A, LDA, W, WORK, LWORK, IWORK, LIWORK, INFO )
+  // http://www.netlib.org/lapack/double/dsyevd.f
+  char jobz = 'V'; // V for storing eigenvectors, N to ignore
+  char uplo = 'U'; // stoting upper (U) or lower (L) triangle of A
+  // leading dimensions:
+  // it is a number of elements in a row(if using row-major notaion)
+  int ldh = N; // using NxN matrix
+  int info; // output of the subroutine (0 - finished succesfuly)
+  
+  // Compute eigen values and eigen vectors
+  b_t();
+  
+  // TODO
+  info = LAPACKE_dsyevd (CblasRowMajor, jobz, uplo, N, H, ldh, W);
+  // LAPACKE_dsyevd (CblasRowMajor, jobz, uplo, N, H, ldh, W, WORK,  ldw, IWORK, ldi);
+  if(info!=0) { printf("Error: LAPACKE_dsyevd=%d\n", info); return 1;}
+  
+  rt = e_t();
+  printf("Computation time: %fsec\n", rt);
 
-    double *H; // matrix
-    cppmallocl(H, N * N, double);
-
-    int i, j;
-    double rt;
-
-    // set matrix
-    for (i = 1; i <= N; i++)
-        for (j = 1; j <= N; j++)
-            H[IDX1(i, j)] = matrix_H(i, j);
-
-    // Compute eigen values and eigen vectors
-    b_t();
-
-    // TODO
-
-    double rt = e_t();
-    printf("Computation time: %fsec\n", rt);
-
-    return 1;
+  FILE* fValues = fopen("eigenvalues.txt","w"); // file for storring eigenvalues
+  FILE* fVectors = fopen("eigenvectors.txt","w"); // file for storring vectors
+  fprintf(fVectors,"%d\n",N); // first value in the file is dimention of the vectors
+  for(int i=0; i<N; i++){
+    fprintf(fValues,"%lf\n",W[i]);
+    for(int j=0; j<N;j++)
+      fprintf(fVectors,"%lf ", H[j, i]);
+    fprintf(fVectors,"\n");
+  }
+  fclose(fValues);
+  fclose(fVectors);
+  return 1;
 }
+
