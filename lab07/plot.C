@@ -1,3 +1,5 @@
+#include <iostream>
+
 int w = 600;
 int h = 600;
 
