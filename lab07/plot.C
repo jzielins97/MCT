@@ -5,8 +5,8 @@ int h = 600;
 
 void plot(double omega = 0.001){
   // files storing eigenvalues and corresponding vectors
-  ifstream fValues("eigenvalues.txt");
-  ifstream fVectors("eigenvectors.txt");
+  ifstream fValues("/mnt/dwarf/MCT/lab07/eigenvalues.txt");
+  ifstream fVectors("/mnt/dwarf/MCT/lab07/eigenvectors.txt");
 
   double eigenvalue;
 
@@ -21,6 +21,11 @@ void plot(double omega = 0.001){
 
   TGraph* gr;
   TMultiGraph* mg = new TMultiGraph();
+  auto legend = new TLegend(0.15,0.7,0.9,0.9);
+  legend->SetFillStyle(0);
+  legend->SetLineWidth(0);
+  legend->SetTextSize(0.025);
+  legend->SetNColumns(5);
   int n = 0;
   int nCorrect = 0;
   std::cout<<"Compare Eigenvalues"<<std::endl;
@@ -30,17 +35,26 @@ void plot(double omega = 0.001){
     double En = omega *(n + 0.5);
     double error = TMath::Abs(En - eigenvalue);
     if(error<0.0001) nCorrect++;
+    int points = 0;
     
     if(n<5){
       printf("%12.6lf|%12.6lf|%12.6lf\n",eigenvalue, En, error);
       gr = new TGraph();
       for(int i=0; i<N; i++){
 	fVectors>>valY;
-	gr->SetPoint(i, i, valY);
+	// if(i==0) printf("%lf \n",valY);
+	// valY+=0.15*(n+0.5);
+	gr->SetPoint(points, points, valY);
+	points++;
       }
       gr->SetLineColor(n+1);
+      gr->SetMarkerColor(n+1);
+      gr->SetMarkerStyle(21);
+      gr->SetMarkerSize(0.34);
       gr->SetTitle(Form("#lambda=%lf;x [a.u.];#Psi(x)",eigenvalue));
       mg->Add(gr);
+      gr->SetLineWidth(2);
+      legend->AddEntry(gr,Form("#lambda=%.4lf",eigenvalue),"l"); 
     }
     
     n++;  
@@ -48,9 +62,48 @@ void plot(double omega = 0.001){
   std::cout<<"Calculated "<<nCorrect<<" eigenvalues that were closer than 0.001"<<std::endl;
 
   TCanvas* c = new TCanvas("c", "Canva", 10, 10, w, h);
-  c->DrawFrame(0,0, 400, 1);
+  c->DrawFrame(0,-0.3, N, 0.3);
   mg->Draw("l");
+  legend->Draw();
   mg->GetHistogram()->SetTitle("First five eigenvectors;x [a.u]; #Psi(x)");
   c->SaveAs("eigenvectors.png");
    
+}
+
+void time(){
+  TGraph* gr = new TGraph();
+  gr->SetMarkerStyle(20);
+  gr->SetMarkerSize(1.);
+  gr->SetMarkerColor(kBlue);
+  ifstream ifile("time.txt");
+  Double_t t;
+  Int_t n;
+  Int_t i=0;
+  while(ifile>>n>>t){
+    gr->SetPoint(i, n, t);
+    std::cout<<n<<" "<<t<<std::endl;
+    i++;
+  }
+  TCanvas* c = new TCanvas("cTime","Time analysis",w,h);
+  gr->Draw("ap");
+  gr->SetTitle("Scaling of LAPACKE_dsuevd;n;t [s]");
+
+  // prediction
+  TF1* fun = new TF1("fun","[0]+[1]*exp([2]*x-[3])",0,10000);
+  fun->SetParameters(0, 1, 0.0001,0);
+  gr->Fit(fun,"","0");
+  TPaveText* pt = new TPaveText(0.1,0.5,0.5, 0.9,"NB NDC");
+  pt->SetLineWidth(0);
+  pt->SetFillStyle(0);
+  pt->SetTextSize(0.04);
+  pt->AddText("Fit results:");
+  pt->AddText("t(n)=a+b*exp(c*n-d)");
+  pt->AddText(Form("a=%lf",fun->GetParameter(0)));
+  pt->AddText(Form("b=%lf",fun->GetParameter(1)));
+  pt->AddText(Form("c=%lf",fun->GetParameter(2)));
+  pt->AddText(Form("d=%lf",fun->GetParameter(3)));
+  pt->Draw();
+  double predict = fun->GetX(10*60); // value for 10 mins
+  std::cout<<"Max matrix size estimate:"<<TMath::Floor(predict)<<std::endl;
+  c->SaveAs("scaling.png");
 }
