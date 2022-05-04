@@ -1,0 +1,5 @@
+#!/bin/bash
+
+export LD_LIBRARY_PATH=/usr/local/lapack-3.9.0-gcc721/lib64/
+
+gcc eigenvalue.c -o eigenvalue -O3 -lcblas -llapacke -I/usr/local/lapack-3.9.0-gcc721/include/ -I/usr/include/ -L/usr/lib64/atlas/ -L/usr/local/lapack-3.9.0-gcc721/lib64/ -lm

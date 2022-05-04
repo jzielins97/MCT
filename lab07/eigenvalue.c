@@ -1,7 +1,10 @@
 /**
  * Task 6 template
  * 
- * gcc eigenvalue.c -o eigenvalue -O3 -I/usr/include/ -L/usr/lib64/atlas/ -l cblas -llapack -lm
+ * export LD_LIBRARY_PATH=/usr/local/lapack-3.9.0-gcc721/lib64/
+ *
+ * gcc eigenvalue.c -o eigenvalue -O3 -lcblas -llapacke -I/usr/local/lapack-3.9.0-gcc721/include/ -I/usr/include/ -L/usr/lib64/atlas/ -L/usr/local/lapack-3.9.0-gcc721/lib64/ -lm
+ *
  * */
 
 #include <stdlib.h>
@@ -25,7 +28,7 @@
 
 // call dsyevd(jobz, uplo, n, a, lda, w, work, lwork, iwork, liwork, info)
 
-#define N 1000
+#define N 400
 /**
  * Function returns value of matrix element A_{ij}
  * i,j iterates from 1 to M as in standard mathematical notation
@@ -78,7 +81,7 @@ int main()
   // SUBROUTINE DSYEVD( JOBZ, UPLO, N, A, LDA, W, WORK, LWORK, IWORK, LIWORK, INFO )
   // http://www.netlib.org/lapack/double/dsyevd.f
   char jobz = 'V'; // V for storing eigenvectors, N to ignore
-  char uplo = 'U'; // stoting upper (U) or lower (L) triangle of A
+  char uplo = 'L'; // storing upper (U) or lower (L) triangle of A
   // leading dimensions:
   // it is a number of elements in a row(if using row-major notaion)
   int ldh = N; // using NxN matrix
@@ -88,7 +91,7 @@ int main()
   b_t();
   
   // TODO
-  info = LAPACKE_dsyevd (CblasRowMajor, jobz, uplo, N, H, ldh, W);
+  info = LAPACKE_dsyevd(CblasRowMajor, jobz, uplo, N, H, ldh, W);
   // LAPACKE_dsyevd (CblasRowMajor, jobz, uplo, N, H, ldh, W, WORK,  ldw, IWORK, ldi);
   if(info!=0) { printf("Error: LAPACKE_dsyevd=%d\n", info); return 1;}
   
@@ -100,8 +103,8 @@ int main()
   fprintf(fVectors,"%d\n",N); // first value in the file is dimention of the vectors
   for(int i=0; i<N; i++){
     fprintf(fValues,"%lf\n",W[i]);
-    for(int j=0; j<N;j++)
-      fprintf(fVectors,"%g ", H[i*lda+j]);
+    for(int j=0; j<ldh;j++)
+      fprintf(fVectors,"%g ", H[j*N+i]);
     fprintf(fVectors,"\n");
   }
   fclose(fValues);
