@@ -28,13 +28,14 @@ void plot(double omega = 0.001){
   legend->SetNColumns(5);
   int n = 0;
   int nCorrect = 0;
+  double epsilon = 0.0001;
   std::cout<<"Compare Eigenvalues"<<std::endl;
   std::cout<<" Numerical  | Analytical | difference"<<std::endl;
   std::cout<<"_____________________________________"<<std::endl;
   while(fValues>>eigenvalue){
     double En = omega *(n + 0.5);
     double error = TMath::Abs(En - eigenvalue);
-    if(error<0.0001) nCorrect++;
+    if(error<epsilon) nCorrect++;
     int points = 0;
     
     if(n<5){
@@ -59,7 +60,7 @@ void plot(double omega = 0.001){
     
     n++;  
   }
-  std::cout<<"Calculated "<<nCorrect<<" eigenvalues that were closer than 0.001"<<std::endl;
+  std::cout<<"Calculated "<<nCorrect<<" eigenvalues that were closer than "<<epsilon<<std::endl;
 
   TCanvas* c = new TCanvas("c", "Canva", 10, 10, w, h);
   c->DrawFrame(0,-0.3, N, 0.3);
@@ -102,8 +103,11 @@ void time(){
   pt->AddText(Form("b=%lf",fun->GetParameter(1)));
   pt->AddText(Form("c=%lf",fun->GetParameter(2)));
   pt->AddText(Form("d=%lf",fun->GetParameter(3)));
-  pt->Draw();
   double predict = fun->GetX(10*60); // value for 10 mins
+  pt->AddLine(0.1,0.25,.9,0.25);
+  pt->AddText("Max matrix size");
+  pt->AddText(Form("estimate:=%.0f",TMath::Floor(predict)));
   std::cout<<"Max matrix size estimate:"<<TMath::Floor(predict)<<std::endl;
+  pt->Draw();
   c->SaveAs("scaling.png");
 }
