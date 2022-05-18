@@ -118,7 +118,7 @@ int main( int argc , char ** argv )
   double priv_cov[10][10] = { 0 }; // private storage for covariance for each process
   double avg_var[10] = { 0 }; // global average array
   double priv_avg[10] = { 0 }; // private average array (for each process)
-  // double var0i, var1i, var2i, var3i, var4i, var5i, var6i, var7i, var8i, var9i; //memory optimalization
+  double var0i, var1i, var2i, var3i, var4i, var5i, var6i, var7i, var8i, var9i; //memory optimalization
   MPI_Barrier(MPI_COMM_WORLD);
   b_t();              // start timing
 

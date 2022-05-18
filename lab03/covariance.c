@@ -19,7 +19,6 @@
 
 //include MPI library
 #include "mpi.h" 
-
 #include "mct_utils.h"
 
 #define NELEMENTS 134217728
@@ -68,10 +67,9 @@ int main( int argc , char ** argv )
   }
 
   b_t(); // start timing
-  // printf("\t- process %3d loading data:\n", ip);
   for(i=0; i<5; i++){
       	
-    sprintf(file_name, "/home2/archive/MCT-2022/lab1/var%d.dat", i+1);
+    sprintf(file_name, "/home/dteam201/data/var%d.dat", i+1);
     // printf("# READING DATA: `%s`...\n", file_name);
       
     fp = fopen(file_name, "rb");
@@ -81,7 +79,6 @@ int main( int argc , char ** argv )
     fseek( fp, i0*sizeof(double), SEEK_SET);
     // read chunk from the file
     size_t ftest = fread(var[i], sizeof(double), Nip, fp);
-    // printf("\tRead from file #%1d: %ld; Range: [%ld,%ld]; Size of array: %ld MB\n", i, ftest, i0, i0+Nip-1, sizeof(double)*ftest/1024/1024);
     if(ftest!=Nip) { printf("# ERROR: Cannot read `%s`!\n", file_name); return EXIT_FAILURE; }
 
     // close file
@@ -91,15 +88,12 @@ int main( int argc , char ** argv )
 
   if(ip!=(np-1)){
     //MPI_Send(void* data, int count, MPI_Datatype datatype, int destination, int tag, MPI_Comm communicator);
-    // printf("\t- process %3d sending message to %3d...",ip, ip+1);
     MPI_Send(&outmsg, 1, MPI_CHAR, ip+1, 1, MPI_COMM_WORLD); // send signal to process ip+1 that reading of my chunks is finished
-    // printf("sent\n");
   }// end of if(ip!=(np-1))
-    
+  
+  MPI_Barrier(MPI_COMM_WORLD);
   double tio = e_t(); // stop timing
   if(ip==0) printf("# READ TIME: %f sec\n", tio);
-    
-  MPI_Barrier(MPI_COMM_WORLD);
 
   long int idx[10] = {10,13421673,25501328,41606496,53677091,73818750,83214911,93952210,106032910,132875451};
   for(i=0; i<5; i++) 
@@ -113,31 +107,30 @@ int main( int argc , char ** argv )
   double priv_cov[10][10] = { 0 }; // private storage for covariance for each process
   double avg_var[10] = { 0 }; // global average array
   double priv_avg[10] = { 0 }; // private average array (for each process)
-  // double var0i, var1i, var2i, var3i, var4i, var5i, var6i, var7i, var8i, var9i; //memory optimalization
+  double var0i, var1i, var2i, var3i, var4i, var5i, var6i, var7i, var8i, var9i; //memory optimalization
   MPI_Barrier(MPI_COMM_WORLD);
   b_t();              // start timing
 
   //generate additional random variables
   for(in = 0; in < Nip; in++){ // calculating partial sum for a chunk
-    priv_avg[0] += var[0][in];
-    priv_avg[1] += var[1][in];
-    priv_avg[2] += var[2][in];
-    priv_avg[3] += var[3][in];
-    priv_avg[4] += var[4][in];
+    /* priv_avg[0] += var[0][in]; */
+    /* priv_avg[1] += var[1][in]; */
+    /* priv_avg[2] += var[2][in]; */
+    /* priv_avg[3] += var[3][in]; */
+    /* priv_avg[4] += var[4][in]; */
 
-    var[5][in] = sin(var[1][in]) + sin(var[0][in]);
-    var[6][in] = exp(var[2][in]) - exp(-1.*var[4][in]);
-    var[7][in] = sin(var[3][in])*cos(var[0][in]) + cos(var[3][in])*sin(var[2][in]);
-    var[8][in] = hypot(var[2][in], var[1][in]);
-    var[9][in] = cbrt(var[3][in]);
+    /* var[5][in] = sin(var[1][in]) + sin(var[0][in]); */
+    /* var[6][in] = exp(var[2][in]) - exp(-1.*var[4][in]); */
+    /* var[7][in] = sin(var[3][in])*cos(var[0][in]) + cos(var[3][in])*sin(var[2][in]); */
+    /* var[8][in] = hypot(var[2][in], var[1][in]); */
+    /* var[9][in] = cbrt(var[3][in]); */
     
-    priv_avg[5] += var[5][in];
-    priv_avg[6] += var[6][in];
-    priv_avg[7] += var[7][in];
-    priv_avg[8] += var[8][in];
-    priv_avg[9] += var[9][in];
+    /* priv_avg[5] += var[5][in]; */
+    /* priv_avg[6] += var[6][in]; */
+    /* priv_avg[7] += var[7][in]; */
+    /* priv_avg[8] += var[8][in]; */
+    /* priv_avg[9] += var[9][in]; */
     
-    /*
     // read - 5
     var0i = var[0][in];
     var1i = var[1][in];
@@ -173,7 +166,6 @@ int main( int argc , char ** argv )
     priv_avg[8] += var8i;
     priv_avg[9] += var9i;
     // total of 5 + 15 = 20 (was 21+15 = 36)
-    */
   } 
   
   for(i = 0; i<10; i++) priv_avg[i] /=  NELEMENTS; // calculating partial average
@@ -201,9 +193,6 @@ int main( int argc , char ** argv )
     fprintf(fout,"%d\t%lf\n",np,tcmp);
     fclose(fout);
   }
-  
-
-
   
   MPI_Barrier(MPI_COMM_WORLD);
   // print results

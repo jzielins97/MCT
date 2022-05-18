@@ -19,14 +19,13 @@
 
 //include MPI library
 #include "mpi.h" 
-
 #include "../mct_utils.h"
 
 #define NELEMENTS 134217728
 
 int main( int argc , char ** argv ) 
 {
-  FILE* fout = fopen("stats_mpiio.txt","a"); // file for storring times
+  FILE* fout = fopen("stats_mpi.txt","a"); // file for storring timew
   if(fout == NULL) {
     printf("# Error: cannot open the file");
     return EXIT_FAILURE;
@@ -40,16 +39,11 @@ int main( int argc , char ** argv )
   MPI_Comm_size( MPI_COMM_WORLD, &np ); // total number of processes
   MPI_Comm_rank( MPI_COMM_WORLD, &ip ); // id of process st 0 <= ip < np
 
-  // MPI I/O pointers
-  MPI_File fh;
-  MPI_Offset my_offset;
-  MPI_Status status;
-  int count;
-
   long int Nip, i0;  
   int i, j, in;
   double *var[10];
-  FILE* fp;
+  /* for(i=0; i<5; i++) cppmallocl(var[i],NELEMENTS,double);      */
+  FILE * fp;
   char file_name[128];
           
 
@@ -57,6 +51,7 @@ int main( int argc , char ** argv )
   Nip = getNip(ip, np, NELEMENTS);
   i0 = get_i0(ip, np, NELEMENTS);
   size_t size = sizeof(double)*Nip;
+  // printf("Process ip=%3d: Number of elements: %ld; Range: [%ld,%ld]; Size of array: %ld MB\n", ip, Nip, i0, i0+Nip-1, size/1024/1024);
 
   // Allocate memory
   for(i=0; i<10; i++) cppmallocl(var[i], Nip, double);
@@ -65,26 +60,36 @@ int main( int argc , char ** argv )
   // Read binary data
   MPI_Barrier(MPI_COMM_WORLD);
   b_t(); // start timing
-  for(i=0; i<5; i++){
-      	
-    sprintf(file_name, "/home/dteam201/data/var%d.dat", i+1);
-    MPI_File_open(MPI_COMM_WORLD, file_name, MPI_MODE_RDONLY, MPI_INFO_NULL, &fh);
-    my_offset=(MPI_Offset)(i0*sizeof(double));
-    MPI_File_seek(fh, my_offset, MPI_SEEK_SET);
+  if(ip>0){
+    // MPI_Rev(void* data, int count, MPI_Datatype datatype, int source, int tag, MPI_Comm communicator, MPI_Status* status);
+    MPI_Recv(&inmsg, 1, MPI_CHAR,ip-1, 1, MPI_COMM_WORLD, &Stat ); // wait for signal from previous process
+  }
 
-    MPI_File_read_all(fh, var[i], Nip, MPI_DOUBLE, &status);
-    MPI_Get_count(&status, MPI_DOUBLE, &count);
-    if(count!=Nip) { printf("# ERROR: Cannot read `%s`!\n", file_name); return EXIT_FAILURE; }
+  for(i=0; i<5; i++){
+    sprintf(file_name, "/home/dteam201/data/var%d.dat", i+1);      
+    fp = fopen(file_name, "rb");
+    if(fp==NULL) { printf("# ERROR: Cannot open `%s`!\n", file_name); return EXIT_FAILURE; }
+    
+    //  move file pointer to the beginning of the chunk for the given process
+    fseek( fp, i0*sizeof(double), SEEK_SET);
+    // read chunk from the file
+    size_t ftest = fread(var[i], sizeof(double), Nip, fp);
+    if(ftest!=Nip) { printf("# ERROR: Cannot read `%s`!\n", file_name); return EXIT_FAILURE; }
 
     // close file
-    MPI_File_close(&fh);
+    fclose(fp);
 	
   }// end of reading files for loop
+
+  if(ip!=(np-1)){
+    //MPI_Send(void* data, int count, MPI_Datatype datatype, int destination, int tag, MPI_Comm communicator);
+    MPI_Send(&outmsg, 1, MPI_CHAR, ip+1, 1, MPI_COMM_WORLD); // send signal to process ip+1 that reading of my chunks is finished
+  }// end of if(ip!=(np-1))
   
-  double read_time = e_t(); // stop timing
-  if(ip==0) printf("# READ TIME: %f sec\n", read_time);
-    
   MPI_Barrier(MPI_COMM_WORLD);
+  double tio = e_t(); // stop timing
+  if(ip==0) printf("# READ TIME: %f sec\n", tio);
+
   long int idx[10] = {10,13421673,25501328,41606496,53677091,73818750,83214911,93952210,106032910,132875451};
   for(i=0; i<5; i++) 
     for(j=0; j<10; j++)
@@ -98,11 +103,29 @@ int main( int argc , char ** argv )
   double avg_var[10] = { 0 }; // global average array
   double priv_avg[10] = { 0 }; // private average array (for each process)
   double var0i, var1i, var2i, var3i, var4i, var5i, var6i, var7i, var8i, var9i; //memory optimalization
-  MPI_Barrier(MPI_COMM_WORLD); // make sure that all processes are at the same point in the code
+  MPI_Barrier(MPI_COMM_WORLD);
   b_t();              // start timing
 
   //generate additional random variables
   for(in = 0; in < Nip; in++){ // calculating partial sum for a chunk
+    /* priv_avg[0] += var[0][in]; */
+    /* priv_avg[1] += var[1][in]; */
+    /* priv_avg[2] += var[2][in]; */
+    /* priv_avg[3] += var[3][in]; */
+    /* priv_avg[4] += var[4][in]; */
+
+    /* var[5][in] = sin(var[1][in]) + sin(var[0][in]); */
+    /* var[6][in] = exp(var[2][in]) - exp(-1.*var[4][in]); */
+    /* var[7][in] = sin(var[3][in])*cos(var[0][in]) + cos(var[3][in])*sin(var[2][in]); */
+    /* var[8][in] = hypot(var[2][in], var[1][in]); */
+    /* var[9][in] = cbrt(var[3][in]); */
+    
+    /* priv_avg[5] += var[5][in]; */
+    /* priv_avg[6] += var[6][in]; */
+    /* priv_avg[7] += var[7][in]; */
+    /* priv_avg[8] += var[8][in]; */
+    /* priv_avg[9] += var[9][in]; */
+    
     // read - 5
     var0i = var[0][in];
     var1i = var[1][in];
@@ -141,6 +164,9 @@ int main( int argc , char ** argv )
   } 
   
   for(i = 0; i<10; i++) priv_avg[i] /=  NELEMENTS; // calculating partial average
+  // MPI_Reduce(void* send_data, void* recv_data, int count, MPI_Datatype datatype, MPI_Op op, int root, MPI_Comm communicatior);
+  // MPI_Alleduce(void* send_data, void* recv_data, int count, MPI_Datatype datatype, MPI_Op op, MPI_Comm communicatior);
+  // calculate gloabl average
   MPI_Allreduce(priv_avg, avg_var, 10, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
   
 
@@ -155,40 +181,14 @@ int main( int argc , char ** argv )
     }
   }
   MPI_Reduce(priv_cov, cov, 100, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
-  /* MPI_Barrier(MPI_COMM_WORLD); */
   double tcmp = e_t(); // stop timing
-
-  // writing time
-  b_t(); // start timing
-  for(i=0; i<5; i++){      	
-    sprintf(file_name, "/home/dteam201/data/var%d.dat", i+6);
-    MPI_File_open(MPI_COMM_WORLD, file_name, MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &fh);
-    my_offset=(MPI_Offset)(i0*sizeof(double));
-    MPI_File_seek(fh, my_offset, MPI_SEEK_SET);
-
-    MPI_File_write_all(fh, var[i], Nip, MPI_DOUBLE, &status);
-    MPI_Get_count(&status, MPI_DOUBLE, &count);
-    if(count!=Nip) { printf("# ERROR: Cannot write `%s`!\n", file_name); return EXIT_FAILURE; }
-
-    // close file
-    MPI_File_close(&fh);
-  }// end of writing files for loop
-  MPI_Barrier(MPI_COMM_WORLD);
-  double write_time = e_t();
-
   if(ip==0){
-    double read_bandwidth = 5.*NELEMENTS*sizeof(double)/read_time/1024/1024;
-    printf("# READING TIME: %f sec, bandwidth: %f [MB/s]\n", read_time, read_bandwidth);
     printf("# COMPUTATION TIME: %f sec\n", tcmp);
-    double write_bandwidth = 5.*NELEMENTS*sizeof(double)/write_time/1024/1024;
-    printf("# WRITING TIME: %f sec, bandwidth: %f [MB/s]\n", write_time, write_bandwidth);
     printf("# number of processes = %d\n",np);
-    fprintf(fout,"%d\t%lf\t%lf\t%lf\t%lf\t%lf\n",np,read_time,read_bandwidth,tcmp,write_time, write_bandwidth);
+    double read_bandwidth = 5.*NELEMENTS*sizeof(double)/tio/1024/1024;
+    fprintf(fout,"%d\t%lf\t%lf\t%lf\n",np,tio,read_bandwidth,tcmp);
     fclose(fout);
   }
-  
-
-
   
   MPI_Barrier(MPI_COMM_WORLD);
   // print results

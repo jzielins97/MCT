@@ -1,0 +1,11 @@
+#!/bin/bash
+
+for np in 2 4 8 16 20 30 40
+do
+    echo "NP=$np"
+    echo "    -Running code with mpiio"
+    ./CompileAndRun.sh -nc -np $np
+    echo "    -Running code with send/recv"
+    ./CompileAndRun.sh -nc -np $np -lab3
+done
+
