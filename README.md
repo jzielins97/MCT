@@ -2,7 +2,7 @@
 Modern Computing Technologies (2022)
 
 
-## Lab 1 (task 1):
+## Lab 1 (Task 1):
 
 Modern Computing Technologies, WUT, 2022
 
@@ -49,7 +49,7 @@ cov(10,10)= 0.14192182
 6. Deadline for submission of report is: 09-03-2022
 
 
-## Lab 2 (task 2):
+## Lab 2 (Task 2):
 
 
 Speed up your Task1 code for the covariance matrix calculation using openMP.
@@ -61,7 +61,7 @@ In the report provide simple plot showing the scaling.
 
 EDIT: USE job.sh SCRIPT TO CALL A JOB. DO NOT USE NODE 72 IN INTERACTIVE MODE.
 
-## Lab 3 & 4 (task 3):
+## Lab 3 & 4 (Task 3):
 ### PART I
 Start from the code: /home2/archive/MCT-2022/lab3
 
@@ -89,7 +89,7 @@ t1 – time measured for serial code (single computing unit)
 n – number of computing units
 Check correctness of computation – compare results with reference code (serial) .
 
-## Lab 5 (task 4):
+## Lab 5 (Task 4):
 Rewrite your code for covariance matrix (OpenMP version) to Python + C  framework.
 
 Identify computationally intensive parts and implement them in C  language and use Python to create 'user friendly' code/API.
@@ -98,7 +98,7 @@ Identify computationally intensive parts and implement them in C  language and u
 REPORT:
     C and python code + terminal output
 
-## Lab 6 (task 5)
+## Lab 6 (Task 5)
 Starting from provided template write a code that computes laplace (in 2D) of function f(x,y):\
     <img src="https://latex.codecogs.com/svg.image?\bg{white}F(x,y)&space;=&space;\Delta_{2D}&space;f(x,y)&space;=&space;\frac{\partial^2&space;f}{\partial&space;x^2}&space;&plus;&space;\frac{\partial^2&space;f}{\partial&space;y^2}" title="https://latex.codecogs.com/svg.image?\large \bg{white} F(x,y) = \Delta_{2D} f(x,y) = \frac{\partial^2 f}{\partial x^2} + \frac{\partial^2 f}{\partial y^2}" />
 
@@ -119,7 +119,7 @@ Compute forward FT of f(x,y) to obtain f(k_x, k_y).
 From that Construct F(k_x, k_y) = (-k_x^2 - k_y^2) f(k_x, k_y)/(n_x n_y).
 Then compute backward FT of F(k_x, k_y) to obtain F(x,y) = \lap_{2D} f(x,y)
 
-##Lab 7 (task 6):
+##Lab 7 (Task 6):
 Instructions
 Using provided template in /home2/archive/MCT-2022/lab7 write a code that computes all eigenvalues and eigenvectors of a given matrix_H() function.
 
@@ -131,7 +131,6 @@ Plot first 5 eigenvectors, which qualitatively (to the sign) should agree with e
 https://en.wikipedia.org/wiki/Quantum_harmonic_oscillator#/media/File:HarmOsziFunktionen.png
 
 -----------------------
-WEIGHT: 1.5
 REPORT:
 code
 comparison of computed eigenvalues with analytic solution
@@ -141,3 +140,35 @@ estimate of what is the maximum matrix size that you can diagonalize in tme shor
 -----------------------
 TIPS:
 Note that in line 25 of the given template one can find a function that should be used in order to diagonalize the Hamiltoniam Matrix.
+
+## Lab 8 (Task 7):
+Instructions
+Start with the code that you constructed during lab 3 and rewrite the part of the code that is responsibe for reading the files (var1-var5) using MPI I/O functions, that were presented during the lecture. 
+
+Compare timings with the previous solution (MPI_Send/Recv and MPI I/O).
+Additionally add block of code that will write into files var6-var10, again using MPI I/O functions.
+
+-----------------------
+REPORT:
++code
++output of the code (with covariance matrix)
++comparison of reading time of previous solution with the MPI I/O.
++write time of var6-var10
++plots showing measured bandwidth for read and write (MB/sec) as a function of number of MPI processes
+
+## Lab 9 (Task 8)
+Instructions
+Write a code that computes laplace (in 2D) of function f(x,y) using cuFFT and CUDA
+Start with the code constructed for lab 5. 
+
+Use following links as a hints:
+https://docs.nvidia.com/cuda/cufft/index.html
+https://docs.nvidia.com/cuda/cufft/index.html#fftw-conversion-guide
+https://docs.nvidia.com/cuda/cufft/index.html#cufft-code-examples
+Execute test runs with cuda for nx=ny=4112
+
+-------------------------
+REPORT: 
++code
++output
++timngs for computation and data transfers
