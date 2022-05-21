@@ -80,11 +80,11 @@ int main( int argc , char ** argv )
     MPI_File_close(&fh);
 	
   }// end of reading files for loop
-  
+
+  MPI_Barrier(MPI_COMM_WORLD);
   double read_time = e_t(); // stop timing
   if(ip==0) printf("# READ TIME: %f sec\n", read_time);
     
-  MPI_Barrier(MPI_COMM_WORLD);
   long int idx[10] = {10,13421673,25501328,41606496,53677091,73818750,83214911,93952210,106032910,132875451};
   for(i=0; i<5; i++) 
     for(j=0; j<10; j++)
