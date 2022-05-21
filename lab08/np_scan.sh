@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for np in 2 4 8 16 20 30 40
+for np in 40 40 20 20 16 16 8 8 4 4 2 2 1 1
 do
     echo "NP=$np"
     echo "    -Running code with mpiio"

@@ -1,2 +1,2 @@
 np	t_read [s]	bw_read [MB/s]	t_cmp [s]	t_write [s]	bw_write [MB/s]
-
+1	46.447600	110.231745	106.206574	253.138104	20.226113

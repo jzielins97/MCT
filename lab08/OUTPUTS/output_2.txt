@@ -1,4 +1,4 @@
-# READ TIME: 32.429125 sec
+# READ TIME: 36.253726 sec
 var[0][        10]=     0.025864789
 var[0][  13421673]=     -0.59849058
 var[0][  25501328]=     -0.79813193
@@ -49,9 +49,9 @@ var[4][  83214911]=        1.808933
 var[4][  93952210]=       1.5448955
 var[4][ 106032910]=       1.5916046
 var[4][ 132875451]=       1.1131668
-# READING TIME: 32.429125 sec, bandwidth: 157.882767 [MB/s]
-# COMPUTATION TIME: 78.481147 sec
-# WRITING TIME: 41.374676 sec, bandwidth: 123.747193 [MB/s]
+# READING TIME: 36.253726 sec, bandwidth: 141.226863 [MB/s]
+# COMPUTATION TIME: 65.412931 sec
+# WRITING TIME: 46.785863 sec, bandwidth: 109.434766 [MB/s]
 # number of processes = 2
 cov( 1, 1)=      0.33330407
 cov( 2, 1)=      0.33330627
