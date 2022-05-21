@@ -33,14 +33,12 @@ print(mpi_read)
 # X, Y = (list(x) for x in zip(*sorted(zip(X,Y), key=lambda pair: pair[0])))
 
 
-plt.plot(X,t_read,'o-',color='r')
-plt.plot(X,t_write,'o-',color='g')
-plt.plot(X,mpi_read,'o-', color='b')
-plt.title("Computational time as function of number of threads used") # set title for the graph
-plt.legend(['MPII/O read','MPII/O write','MPI send/recv'])
-plt.title("Comparison of read/write times for the MPII/O and send/recv") # set title for the graph
+plt.plot(X,bw_read,'o-',color='r')
+plt.plot(X,bw_write,'o-',color='g')
+plt.legend(['MPII/O read','MPII/O write'])
+plt.title("Bandwidth for read and write with MPII/O") # set title for the graph
 plt.xlabel("Number of threads [-]") # set x label title
-plt.ylabel("Operation time [s]") # set y label title
-plt.savefig("times.png", transparent=False, facecolor="white") # save plot as png with white background
+plt.ylabel("Bandwidth [MB/s]") # set y label title
+plt.savefig("bandwidth.png", transparent=False, facecolor="white") # save plot as png with white background
 
 
