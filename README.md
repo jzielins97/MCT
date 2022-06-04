@@ -120,7 +120,6 @@ From that Construct F(k_x, k_y) = (-k_x^2 - k_y^2) f(k_x, k_y)/(n_x n_y).
 Then compute backward FT of F(k_x, k_y) to obtain F(x,y) = \lap_{2D} f(x,y)
 
 ##Lab 7 (Task 6):
-Instructions
 Using provided template in /home2/archive/MCT-2022/lab7 write a code that computes all eigenvalues and eigenvectors of a given matrix_H() function.
 
 Check correctness of computation by comparing with prediction for harmonic oscilator: 
@@ -142,7 +141,6 @@ TIPS:
 Note that in line 25 of the given template one can find a function that should be used in order to diagonalize the Hamiltoniam Matrix.
 
 ## Lab 8 (Task 7):
-Instructions
 Start with the code that you constructed during lab 3 and rewrite the part of the code that is responsibe for reading the files (var1-var5) using MPI I/O functions, that were presented during the lecture. 
 
 Compare timings with the previous solution (MPI_Send/Recv and MPI I/O).
