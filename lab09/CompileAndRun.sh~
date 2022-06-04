@@ -20,11 +20,11 @@ done
 
 rm -f laplace2d-cuda
 # gcc -std=c99 $SOURCE -o laplace2d $FLAGS
-nvcc -arch sm_50 -O3 $SOURCE -o laplace2d-cuda $FLAGS
+nvcc -arch sm_35 -O3 $SOURCE -o laplace2d-cuda $FLAGS
 
 if [ -e laplace2d-cuda ]
 then
-    ./laplace2d-cuda > output.txt
+    ./laplace2d-cuda # > output.txt
 else
     echo "# Compilation failed!"
 fi

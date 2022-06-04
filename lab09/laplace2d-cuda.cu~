@@ -1,10 +1,11 @@
+
 /**
  * Task8, "Modern Computing Technologies"
  * 
  * Author: Jakub Zielinski
  * Date: 5.06.2022
  * 
- * nvcc -arch sm_35 -O3 laplace2d-cuda.cu -o laplace2d-cuda
+ * nvcc -arch sm_35 -O3 laplace2d-cuda.cu -o laplace2d-cuda -lcudart -lcufft -lm
  * */
 
 #include <stdlib.h>
@@ -27,7 +28,7 @@
 
 // See for reference:
 // https://docs.nvidia.com/cuda/cufft/index.html
-#include <cufftw.h>
+#include <cufft.h>
 
 /**
  * Test function
@@ -85,14 +86,15 @@ void test_array_diff(int N, double *a, double *b)
 
 
 // CUDA kernels -------------------------->
-__global__ void calculate_Fk(double dx, double dy, cufftDoubleComplex* fK, int nx, int ny){
+__global__ void calculate_Fk(double dx, double dy, cufftDoubleComplex* fk, cufftDoubleComplex* fK, int nx, int ny){
   cufftDoubleComplex z;
   size_t ixy = blockIdx.x*blockDim.x+threadIdx.x;
   size_t ix = ixy/ny;
   size_t iy = ixy - ix*ny;
   double kx = 0;
   double ky = 0;
-  if(ixy < nx && iy < ny/2+1){
+  // if(ixy < nx * (ny/2+1) ){
+  if(ix < nx && iy < (ny/2+1) ){
     if(ix<nx/2) kx = 2.*M_PI/(dx*nx)*(ix   );
     else        kx = 2.*M_PI/(dx*nx)*(ix-nx);
       
@@ -100,7 +102,7 @@ __global__ void calculate_Fk(double dx, double dy, cufftDoubleComplex* fK, int n
     else        ky = 2.*M_PI/(dy*ny)*(iy-ny);
 
     // recalculate fK real and imaginary part, as cufftComplex  doesn't support some calculations 
-    z=fK[ixy];
+    z=fk[ixy];
     z.x *= (-kx*kx - ky*ky) / (nx*ny);
     z.y *= (-kx*kx - ky*ky) / (nx*ny);
     fK[ixy] = z;
@@ -132,11 +134,13 @@ int main()
   double dy = Ly / ny;
   
   double *h_fxy;
-  double *laplacefxy;
+  double *h_laplacefxy;
   double *formula_laplacefxy;
 
-  cufftDoubleReal *fxy;                // function
-  cufftDoubleComplex *fK;              // array with f(kx, ky)
+  double *fxy;                // function
+  double *laplacefxy;
+  std::complex<double> *fK;              // array with f(kx, ky)
+  std::complex<double> *fk;
 
   double init_t, send_t, calc_t, recv_t; // for timing
 
@@ -146,31 +150,35 @@ int main()
   cudaSetDevice(0); // select GPU for CUDA
   
   //---- Allocate memory on the host ------>
-  /* printf("Allocate memory\n"); */
-  /* printf("\tAllocate memory for fxy at host\n"); */
-  // cudaMallocHost((void**)&h_fxy, n_r[0] * n_r[1] * sizeof(double));
+  printf("Allocate memory\n");
+  printf("\tAllocate memory for fxy at host\n");
+  // cudaMallocHost((void**)&h_fxy, n_r[0] * n_r[1] * sizeof(cufftDoubleReal));
   cppmallocl(h_fxy, n_r[0] * n_r[1], double);
-  /* printf("\tAllocate memory for laplacefxy at host\n"); */
-  // cudaMallocHost((void**)&laplacefxy, n_r[0] * n_r[1] * sizeof(double));
-  cppmallocl(laplacefxy, n_r[0] * n_r[1], double);
-  /* printf("\tAllocate memory for fromula_laplacefxy at host\n"); */
+  printf("\tAllocate memory for fromula_laplacefxy at host\n");
   // cudaMallocHost((void**)&formula_laplacefxy, n_r[0] * n_r[1] * sizeof(double)); // this doesn't have to be coppied to CUDA
   cppmallocl(formula_laplacefxy, n_r[0] * n_r[1], double);
   //---------------------------------------<
   
   //---- Allocate memory on the device ---->
-  /* printf("\tAllocate memory for fxy at device (cuda)\n"); */
-  cudaMalloc((void**)&fxy, n_r[0] * n_r[1] * sizeof(cufftDoubleReal));
+  printf("\tAllocate memory for fxy at device (cuda)\n");
+  cudaMalloc(&fxy, n_r[0] * n_r[1] * sizeof(cufftDoubleReal));
   if (cudaGetLastError() != cudaSuccess){
     fprintf(stderr, "Cuda error: Failed to allocate\n");
     return -1;
   }
-  /* printf("\tAllocate memory for fK at device (cuda)\n"); */
-  cudaMalloc((void**)&fK, n_c[0] * n_c[1] * sizeof(cufftDoubleComplex)); // this doesn't have to saved on the host
+  printf("\tAllocate memory for fK at device (cuda)\n");
+  cudaMalloc(&fK, n_c[0] * n_c[1] * sizeof(cufftDoubleComplex)); // this doesn't have to saved on the host
   if (cudaGetLastError() != cudaSuccess){
     fprintf(stderr, "Cuda error: Failed to allocate\n");
     return -1;
   }
+  //---------------------------------------<
+
+
+  //-------- testing more arrays ---------->
+  cppmallocl(h_laplacefxy, n_r[0] * n_r[1], double);
+  cudaMalloc(&laplacefxy, n_r[0] * n_r[1] * sizeof(double));
+  cudaMalloc(&fk, n_c[0] * n_c[1] * sizeof(std::complex<double>));
   //---------------------------------------<
   
   //--- initialize vectors on the host ---->
@@ -188,7 +196,7 @@ int main()
     }
   }
   init_t = e_t();
-  printf("Time for the initialization of the fxy: %lf s\n", init_t);
+  printf("Initialization time of the fxy vector: %lf s\n", init_t);
   //---------------------------------------<
   
   //---- Copy host vectors to device ------>
@@ -201,32 +209,32 @@ int main()
   /********* start the calculation ********/
   b_t();
   //------- create the forward plan ------->
-  if(cufftPlanMany(&plan_f, 2, n_r, NULL, 1, 0, NULL, 1, 0, CUFFT_D2Z,BATCH) != CUFFT_SUCCESS){
-    fprintf(stderr,"CUFFT error: unable to create plan_f\n");
+  if(cufftPlan2d(&plan_f, n_r[0], n_r[1], CUFFT_D2Z) != CUFFT_SUCCESS){
+    fprintf(stderr,"CUFFT error: unable to create forward plan\n");
   }
   //--------------------------------------<
   
   //------- execute the forward plan ------>
-  if(cufftExecD2Z(plan_f, fxy, fK) != CUFFT_SUCCESS){
+  if(cufftExecD2Z(plan_f, (cufftDoubleReal*)fxy, (cufftDoubleComplex*)fk) != CUFFT_SUCCESS){
     fprintf(stderr, "CUFFT error: unable to execute the forward transform\n");
   }//--------------------------------------<
 
-  //------ calculate transform F(kx,ky) --->
+  //------------ construct F(kx,ky) ------->
   blockSize = 1024; // Number of threads in each thread block
-  gridSize = (int)ceil((float)(n_c[0]*(n_c[1]/2+1))/blockSize); // Number of thread blocks in grid
-  //---------------------------------------<
+  gridSize = (int)ceil((float)n_c[0]*n_c[1]/blockSize); // Number of thread blocks in grid
  
   // Execute the kernel
-  calculate_Fk<<<gridSize, blockSize>>>(dx, dy, fK, nx, ny);
+  calculate_Fk<<<gridSize, blockSize>>>(dx, dy, (cufftDoubleComplex*)fK, (cufftDoubleComplex*)fK, nx, ny);
+  //---------------------------------------<
 
   //------ create the backward plan ------->
-  if(cufftPlanMany(&plan_b, 2, n_r, NULL, 1, 0, NULL, 1, 0, CUFFT_Z2D,BATCH) != CUFFT_SUCCESS){
-    fprintf(stderr,"CUFFT error: unable to create backward plan\n");
+  if(cufftPlan2d(&plan_b, n_r[0], n_r[1], CUFFT_Z2D) != CUFFT_SUCCESS){
+    fprintf(stderr,"CUFFT error: unable to create handle for backward plan\n");
   }
   //--------------------------------------<
   
   //----- execute the backward plan ------->
-  if(cufftExecZ2D(plan_b, fK, fxy) != CUFFT_SUCCESS){
+  if(cufftExecZ2D(plan_b, (cufftDoubleComplex*)fK, (cufftDoubleReal*)laplacefxy) != CUFFT_SUCCESS){
     fprintf(stderr, "CUFFT error: unable to execute the backward transform\n");
   }//--------------------------------------<
   /********* end of the calculation *******/
@@ -235,12 +243,32 @@ int main()
     
   //------- Copy results to host ---------->
   b_t();
-  cudaMemcpy( laplacefxy, fxy, sizeof(double)*n_r[0]*n_r[1], cudaMemcpyDeviceToHost);
+  cudaMemcpy( h_laplacefxy, laplacefxy, sizeof(double)*n_r[0]*n_r[1], cudaMemcpyDeviceToHost);
   recv_t = e_t();
   printf("Copy to host time: %f [sec]; bandwidth=%f [GB/sec]\n", recv_t, sizeof(double)*nx*ny*GB/recv_t);
   //---------------------------------------<
 
   // Check correctness of computation
-  test_array_diff(n_r[0] * n_r[1], laplacefxy, formula_laplacefxy);
+  test_array_diff(n_r[0] * n_r[1], h_laplacefxy, formula_laplacefxy);
+  
+  FILE* fout = fopen("result.dat","w");
+  ixy=0;
+  for(ix=0; ix<nx; ix++){
+    for(iy=0; iy<ny; iy++)
+  	{
+  	  if(ix==nx/2) fprintf(fout,"%10.6f %10.6f %10.6f %10.6f\n", x0 + dx*ix, y0 + dy*iy, h_laplacefxy[ixy], formula_laplacefxy[ixy]);
+  
+  	  ixy++;
+  	}
+  }
+  fclose(fout);
+
+
+  cufftDestroy(plan_f);
+  cufftDestroy(plan_b);
+  cudaFree(fxy);
+  cudaFree(fK);
+  
+
   return 1;
 }

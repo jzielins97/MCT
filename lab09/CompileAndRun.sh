@@ -24,7 +24,7 @@ nvcc -arch sm_35 -O3 $SOURCE -o laplace2d-cuda $FLAGS
 
 if [ -e laplace2d-cuda ]
 then
-    ./laplace2d-cuda > output.txt
+    ./laplace2d-cuda # > output.txt
 else
     echo "# Compilation failed!"
 fi
