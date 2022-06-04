@@ -1,0 +1,10 @@
+Allocate memory
+Initializing the functions vectors
+Initialization time of the fxy vector: 3.090664 s
+Copy to device time: 0.040089 [sec]; bandwidth=3.142478 [GB/sec]
+Computation time: 1.165356 s
+Copy to host time: 0.131254 [sec]; bandwidth=0.959807 [GB/sec]
+#    COMPARISON RESULTS:
+#           |max[a-b]| :    5.9870517e-08
+#         SUM[(a-b)^2] :    3.4487356e-12
+# SQRT(SUM[(a-b)^2])/N :     1.098307e-13
