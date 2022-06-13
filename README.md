@@ -61,7 +61,7 @@ In the report provide simple plot showing the scaling.
 
 EDIT: USE job.sh SCRIPT TO CALL A JOB. DO NOT USE NODE 72 IN INTERACTIVE MODE.
 
-## Lab 3 & 4 (Task 3):
+## Lab 3-4 (Task 3):
 ### PART I
 Start from the code: /home2/archive/MCT-2022/lab3
 
@@ -140,7 +140,7 @@ estimate of what is the maximum matrix size that you can diagonalize in tme shor
 TIPS:
 Note that in line 25 of the given template one can find a function that should be used in order to diagonalize the Hamiltoniam Matrix.
 
-## Lab 8 (Task 7):
+## Lab 8-9 (Task 7):
 Start with the code that you constructed during lab 3 and rewrite the part of the code that is responsibe for reading the files (var1-var5) using MPI I/O functions, that were presented during the lecture. 
 
 Compare timings with the previous solution (MPI_Send/Recv and MPI I/O).
@@ -154,7 +154,7 @@ REPORT:
 +write time of var6-var10
 +plots showing measured bandwidth for read and write (MB/sec) as a function of number of MPI processes
 
-## Lab 9 (Task 8)
+## Lab 10-11 (Task 8)
 Instructions
 Write a code that computes laplace (in 2D) of function f(x,y) using cuFFT and CUDA
 Start with the code constructed for lab 5. 
@@ -170,3 +170,37 @@ REPORT:
 +code
 +output
 +timngs for computation and data transfers
+
+## Lab12-13 (Task 9)
+Instructions
+Preparation for lab 13:
+Register to PL-Grid: https://portal.plgrid.pl/registration/form
+For more info see: https://docs.cyfronet.pl/display/PLGDoc/User+Manual#UserManual-Basicinformation
+To confirm affilition, you can use my data as “Supervisor’s affiliation”:
+Name: Gabriel
+Surname: Wlazlowski
+E-mail: gabriel.wlazlowski@pw.edu.pl
+OPI: 225935
+
+    2. Create trial grant
+    3. Activate service: access to Zeus supercomputer, or access to Eagle supercomputr, or other
+    4. Try to login to the granted supercomputer
+
+
+Task for lab 13:
+    1. Execute strong scaling of MPI code (you can use inversion-scalapack.c)
+    2. Execute strong scaling using one of computers provided by PL-Grid (via trial grant)
+    3. Suppose that your problem requires 100 inversions of matrix of size 25,000 x 25,000. For such problem propose parameters of runs (how many nodes/cores), estimate time-to-solution, and estimate needed budget (CPU-hours),
+
+
+-----------------------
+In the report provide:
+→ compilation script / command and sample of your submission script,
+→ strong scaling plot,
+→ Proposition of execution parameters with time-to-solution and cost estimation with short justification, why you selected these parameters.
+
+
+Time-to-solution: time needed by a computer to solve you problem (hr, min, sec, …) strongly depends on running parameters like number of processes. Computing cost = Time-to-solution x number of processes (CPU-hr, Node-hr, GPU-hr…)
+
+Example:
+if your code was running for 1 hour using 100 CPUs then computing cost was 100 CPU-hr.
