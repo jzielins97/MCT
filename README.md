@@ -171,7 +171,7 @@ REPORT:
 +output
 +timngs for computation and data transfers
 
-## Lab12-13 (Task 9)
+## Lab 12-13 (Task 9)
 Instructions
 Preparation for lab 13:
 Register to PL-Grid: https://portal.plgrid.pl/registration/form
