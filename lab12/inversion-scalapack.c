@@ -59,7 +59,7 @@ extern void pdgemm_(char * TRANSA, char * TRANSB,
                double * C, int * IC, int * JC, int * DESCC );
 
 // matrix size [MxN=M]
-#define M 4000
+#define M 25000
 // size of block in M direction 
 #define MB 8
 // size of block in N direction
